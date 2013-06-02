@@ -8,7 +8,7 @@ import os.path
 from urlparse import urlparse
 from tornado.options import define, options, parse_command_line, parse_config_file
 from tornado.util import ObjectDict
-from utils.config.baseConfig import Config
+from utils.config import Config
 
 define("port", default=8888, help="run on the given port", type=int)
 define("configType", default="dev", help="config type")

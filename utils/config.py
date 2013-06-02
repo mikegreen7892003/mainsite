@@ -20,8 +20,9 @@ class Config(object):
             db="offline",
         ))
         self._db_mongo_comic = ObjectDict(dict(
+            pool_id="comic",
             host="localhost",
-            port=27017,
+            port=17000,
             dbname="comic",
             maxcached=10,
             maxconnections=50,
@@ -29,7 +30,8 @@ class Config(object):
         self._db_redis_comic = ObjectDict(dict(
             host="localhost",
             port=16000,
-            db=0,
+            selected_db=0,
+            maxconnections=500,
         ))
 
     def productConfig(self):

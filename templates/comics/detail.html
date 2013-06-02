@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>comics detail</title>
+</head>
+<body>
+    <img src="{{ image_meta.image_uri }}" alt="comics image" usemap="#comicsmap" height="{{ image_meta.height }}" width="{{ image_meta.width }}"/>
+    <map name="comicsmap" id="comicsmap">
+        {% if image_meta.pre_page is not None %}
+        <area shape="rect" coords="0,0,{{ image_meta.width / 4 }},{{ image_meta.height }}" href="{{ image_meta.pre_page }}" alt="pre" />
+        {% end %}
+        {% if image_meta.next_page is not None %}
+        <area shape="rect" coords="{{ image_meta.width / 4 * 3 }},0,{{ image_meta.width }},{{ image_meta.height }}" href="{{ image_meta.next_page }}" alt="next" />
+        {% end %}
+    </map>
+    <br/>
+    <br/>
+    <a href="{{ image_meta.pre_page}}" alt="pre page">pre page</a>
+    <a href="{{ image_meta.next_page}}" alt="next page">next page</a>
+</body>
+</html>

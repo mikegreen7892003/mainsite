@@ -1,0 +1,6 @@
+[submodule "asyncmongo"]
+	path = utils/asyncmongo
+	url = git@github.com:mikegreen7892003/asyncmongo.git
+[submodule "utils/asyncmongo"]
+	path = utils/asyncmongo
+	url = git@github.com:mikegreen7892003/asyncmongo.git

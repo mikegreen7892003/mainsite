@@ -19,6 +19,13 @@ class Config(object):
             password="",
             db="offline",
         ))
+        self._db_mongo_comic = ObjectDict(dict(
+            host="localhost",
+            port=27017,
+            dbname="comic",
+            maxcached=10,
+            maxconnections=50,
+        ))
         self._db_redis_comic = ObjectDict(dict(
             host="localhost",
             port=16000,

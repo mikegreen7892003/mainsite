@@ -44,7 +44,7 @@ def main():
             (r"/", MainHandler),
             (r"/comics/detail", ComicsDetailHandler),
         ],
-        cookie_secret="IloveNingSiManForever",
+        cookie_secret="IloveYou",
         template_path=os.path.join(os.path.dirname(__file__), "templates"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
         xsrf_cookies=True,

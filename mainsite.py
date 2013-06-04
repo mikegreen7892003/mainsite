@@ -1,13 +1,15 @@
 #!/usr/bin/python
 #encoding=utf-8
 import logging
-import tornado.web
 import os.path
+import tornado.web
+import tornado.gen
 from urlparse import urlparse
 from tornado.options import define, options, parse_command_line, parse_config_file
 from tornado.util import ObjectDict
 from utils.config import Config
 from utils.base import Base
+from tornado.httpclient import AsyncHTTPClient
 
 define("port", default=8888, help="run on the given port", type=int)
 define("config_type", default="dev", help="config type")
@@ -16,6 +18,14 @@ define("config_file", default="localConfig.py", help="filename for additional co
 
 class BaseHandler(tornado.web.RequestHandler):
     pass
+
+
+class TestHandler(BaseHandler):
+    @tornado.web.asynchronous
+    @tornado.gen.coroutine    
+    def get(self):
+        tmp = yield tornado.gen.Task(Base.dao.composite_comics.jset, "goat", {"nothing":"you"})
+        logging.info(tmp)
 
 
 class MainHandler(BaseHandler):
@@ -45,6 +55,7 @@ def main():
         [
             (r"/", MainHandler),
             (r"/comics/detail", ComicsDetailHandler),
+            (r"/test", TestHandler),
         ],
         cookie_secret="IloveYou",
         template_path=os.path.join(os.path.dirname(__file__), "templates"),

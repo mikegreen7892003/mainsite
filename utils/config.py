@@ -15,12 +15,9 @@ class Config(object):
         #    db="comicsOffline",
         #))
         self.db_mongo_comics = ObjectDict(dict(
-            pool_id="comics",
             host="localhost",
             port=27017,
-            maxcached=10,
-            maxconnections=50,
-            dbname="comics", 
+            max_pool_size=10,
         ))
         self.db_redis_comics = ObjectDict(dict(
             host="localhost",
@@ -28,7 +25,11 @@ class Config(object):
             db=0,
         ))
         self.db_composite_comics = ObjectDict(dict(
-            mongo_config=self.db_mongo_comics,
+            mongo_config=ObjectDict(dict(
+                self.db_mongo_comics,
+                dbname="comics",
+                tbname="redis0",
+            )),
             redis_config=self.db_redis_comics,
         ))
 

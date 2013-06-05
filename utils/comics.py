@@ -1,30 +1,99 @@
-class Detail(object):
-    def __init__(self, detail_id):
-        super(Detail, self).__init__()
-        self._detail_id = int(detail_id)
+#encoding=utf-8
+import time
+import json
+from base import Base
+
+
+class Volume(Base):
+    """
+    meta(json): include meta_args
+    image_meta(list): include image list
+    """
+    meta_args = ["title"]
+
+    def initialize(self, volume_id=None):
+        if volume_id is None:
+            self._id = self.__getNewId()
+        else:
+            self._id = int(volume_id)
+
+    def __getNewId(self):
+        return self.getDao().redis_comics.incr("total_volume_id")
+
+    @property
+    def getId(self):
+        return self._id
 
     @property
     def meta(self):
+        assert hasattr(self, "_id")
         if not hasattr(self, "_meta"):
-            self._meta = dict(
-                id=self._detail_id,
-            )
+            self._meta = self.getDao().composite_comics.jget("volume:%d" % (self._id, ))
         return self._meta
 
-    @property
-    def detail_id(self):
-        return self._detail_id
+    @meta.setter
+    def meta(self, value):
+        assert hasattr(self, "_id")
+        assert set(value.keys()) >= set(meta_args)
+        self._meta = value
+        self.getDao().composite_comics.jset("volume:%d" % (self._id, ), self._meta)
 
     @property
     def image_meta(self):
+        assert hasattr(self, "_id")
         if not hasattr(self, "_image_meta"):
-            pass
-            self._image_meta = dict(
-                id=self._detail_id,
-            )
+            self._image_meta = self.getDao().composite_comics.lrange("volume:%d:pic_list" % (self._id, ), 0, -1)
         return self._image_meta
 
+    @image_meta.setter
+    def image_meta(self, values):
+        assert hasattr(self, "_id")
+        self._image_meta = values
+        self.getDao().composite_comics.delete("volume:%d:pic_list" % (self._id, ))
+        self.getDao().composite_comics.rpush("volume:%d:pic_list" % (self._id, ), values)
 
-class Comics(object):
-    def __init__(self, detail_id):
-        pass
+    def save(self, meta, image_meta):
+        self.meta = meta
+        self.image_meta = image_meta
+
+
+class Comics(Base):
+    """
+    meta(json): include meta_args
+    """
+    meta_args = ["create_time", "update_time", "status", "title",
+        "author", "cover", "uploader", "uploader_id", "introduction"]
+
+    def initialize(self, comics_id=None):
+        if comics_id is None:
+            self._id = self.__getNewId()
+        else:
+            self._id = int(comics_id)
+
+    def __getNewId(self):
+        return self.getDao().redis_comics.incr("total_comics_id")
+
+    @property
+    def getId(self):
+        return self._id
+
+    @property
+    def meta(self):
+        assert hasattr(self, "_id")
+        if not hasattr(self, "_meta"):
+            self._meta = self.getDao().composite_comics.jget("comics:%d" % (self._id, ))
+        return self._meta
+
+    @meta.setter
+    def meta(self, value):
+        assert hasattr(self, "_id")
+        value["update_time"] = int(time.time())
+        assert set(value.keys()) >= set(meta_args)
+        self._meta = value
+        self.getDao().composite_comics.jset("comics:%d" % (self._id, ), self._meta)
+
+    def save(self, meta):
+        meta["create_time"] = int(time.time())
+        #TODO
+        #convert uploader_id to uploader
+        self.meta = meta

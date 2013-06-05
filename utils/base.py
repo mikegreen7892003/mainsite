@@ -3,7 +3,10 @@ from dao import Dao
 
 
 class Base(object):
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        self.initialize(*args, **kwargs)
+
+    def initialize(self, *args, **kwargs):
         pass
 
     @staticmethod
@@ -16,3 +19,13 @@ class Base(object):
         config_class = config_class or Config
         cls.config = config_class()
         cls.dao = Dao(cls.config)
+
+    @staticmethod
+    def getDao():
+        assert Base.installed()
+        return Base.dao
+
+    @staticmethod
+    def getConfig():
+        assert Base.installed()
+        return Base.config

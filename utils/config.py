@@ -8,12 +8,6 @@ class Config(object):
         getattr(self, "%sConfig" % (self._config_type,))()
 
     def devConfig(self):
-        #self.db_mysql_comics = ObjectDict(dict(
-        #    host="localhost:3306",
-        #    user="root",
-        #    password="",
-        #    db="comicsOffline",
-        #))
         self.db_mongo_comics = ObjectDict(dict(
             host="localhost",
             port=27017,

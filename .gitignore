@@ -2,6 +2,7 @@
 tornado
 # something strange
 *~
+*.swp
 
 *.py[cod]
 

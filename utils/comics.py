@@ -1,7 +1,7 @@
 #encoding=utf-8
 import time
 import json
-from base import Base
+from utils.base import Base
 
 
 class Volume(Base):

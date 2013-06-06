@@ -1,5 +1,4 @@
 import redis
-import threading
 import json
 from pymongo import MongoClient
 

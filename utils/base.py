@@ -1,5 +1,5 @@
-from config import Config
-from dao import Dao
+from utils.config import Config
+from utils.dao import Dao
 
 
 class Base(object):

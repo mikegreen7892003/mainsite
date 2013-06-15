@@ -3,24 +3,25 @@
 import logging
 import tornado.web
 import os.path
-
-
 from urlparse import urlparse
 from tornado.options import define, options, parse_command_line, parse_config_file
 from tornado.util import ObjectDict
 from utils.config import Config
+from utils.base import Base
 
 define("port", default=8888, help="run on the given port", type=int)
-define("configType", default="dev", help="config type")
+define("config_type", default="dev", help="config type")
 define("config_file", default="localConfig.py", help="filename for additional configuration")
 
 
 class BaseHandler(tornado.web.RequestHandler):
     pass
 
+
 class MainHandler(BaseHandler):
     def get(self):
         self.render("index.html")
+
 
 class ComicsDetailHandler(BaseHandler):
     def getDetailById(self, detail_id):
@@ -39,6 +40,7 @@ class ComicsDetailHandler(BaseHandler):
 
 def main():
     parse_command_line()
+    Base.install()
     app = tornado.web.Application(
         [
             (r"/", MainHandler),

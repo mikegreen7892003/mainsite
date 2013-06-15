@@ -5,37 +5,32 @@ from tornado.options import options
 class Config(object):
     def __init__(self):
         self._config_type = options.config_type
-        getattr(self, "%sConfig"%(self._config_type,))()
-
-    def __getattr__(self, key):
-        if key.startswith("db_"):
-            key = "_%s"%(key,)
-        return getattr(self, key)
+        getattr(self, "%sConfig" % (self._config_type,))()
 
     def devConfig(self):
-        self._db_mysql_comic = ObjectDict(dict(
-            host="localhost:3306",
-            user="root",
-            password="",
-            db="offline",
-        ))
-        self._db_mongo_comic = ObjectDict(dict(
-            pool_id="comic",
+        #self.db_mysql_comics = ObjectDict(dict(
+        #    host="localhost:3306",
+        #    user="root",
+        #    password="",
+        #    db="comicsOffline",
+        #))
+        self.db_mongo_comics = ObjectDict(dict(
+            pool_id="comics",
             host="localhost",
-            port=17000,
-            dbname="comic",
+            port=27017,
             maxcached=10,
             maxconnections=50,
+            dbname="comics", 
         ))
-        self._db_redis_comic = ObjectDict(dict(
+        self.db_redis_comics = ObjectDict(dict(
             host="localhost",
-            port=16000,
-            selected_db=0,
-            maxconnections=500,
+            port=6379,
+            db=0,
+        ))
+        self.db_composite_comics = ObjectDict(dict(
+            mongo_config=self.db_mongo_comics,
+            redis_config=self.db_redis_comics,
         ))
 
     def productConfig(self):
         raise NotImplementedError()
-
-if __name__ == "__main__":
-    pass
